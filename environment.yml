@@ -1,0 +1,21 @@
+channels:
+- conda-forge
+dependencies:
+- fenics-dolfinx >=0.9.0
+- mpich >=4.3.0
+- pyvista >=0.45.0
+- trame >=3.9.0
+- trame-vtk >=2.8.15
+- trame-vuetify >=3.0.1
+- gmsh >=4.13.1
+- python-gmsh >=4.13.1
+- jupyterlab >=4.4.1
+- ipython >=8.11.0, <9
+- python =3.12.7
+- pyironflow >=0.0.17
+- pyiron_workflow >=0.12.3
+- pyiron_atomistics >=0.7.5
+- pyiron_base >=0.11.11
+- atomistics >=0.2.5
+- ase >=3.25.0
+- nglview >=3.1.4
