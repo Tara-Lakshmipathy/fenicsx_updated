@@ -2,7 +2,7 @@ from pyiron_workflow import as_function_node
 from typing import Optional
 import ufl
 
-@as_function_node("plotter")
+@as_function_node("plotter", use_cache=False)
 def PlotInitMeshObject(function_space):
     import pyvista
     from dolfinx.plot import vtk_mesh
@@ -11,13 +11,14 @@ def PlotInitMeshObject(function_space):
     pyvista.start_xvfb()
 
     V = function_space
-    plotter = pyvista.Plotter()
+    plotter = pyvista.Plotter(notebook=True)
     topology, cell_types, geometry = plot.vtk_mesh(V)
     grid = pyvista.UnstructuredGrid(topology, cell_types, geometry)
     plotter.add_mesh(grid, show_edges=True)
+    plotter.show()
     return plotter
 
-@as_function_node("plotter")
+@as_function_node("plotter", use_cache=False)
 def PlotDeformedMesh1DObject(function_space, solution_vector, warp_factor: float):
     import pyvista
     from dolfinx.plot import vtk_mesh
@@ -29,8 +30,9 @@ def PlotDeformedMesh1DObject(function_space, solution_vector, warp_factor: float
     grid = pyvista.UnstructuredGrid(topology, cell_types, x)
     grid.point_data["u"] = solution_vector.x.array
     warped = grid.warp_by_scalar("u", factor=warp_factor)
-    plotter = pyvista.Plotter()
+    plotter = pyvista.Plotter(notebook=True)
     plotter.add_mesh(warped, show_edges=True, show_scalar_bar=True, scalars="u")
+    plotter.show()
     return plotter
 
 
@@ -46,7 +48,7 @@ def three_d_voigt_stress(s):
 def three_d_sigma(u, C):
     return three_d_voigt_stress(ufl.dot(C, three_d_strain_voigt(epsilon(u))))
 
-@as_function_node("plotter")
+@as_function_node("plotter", use_cache=False)
 def PlotVonMises3DObject(domain, function_space, solution_vector, elasticity_tensor, 
                                  warp_factor: float
                                 ):
@@ -75,8 +77,9 @@ def PlotVonMises3DObject(domain, function_space, solution_vector, elasticity_ten
     stresses.interpolate(stress_expr)
     warped.cell_data["VonMises"] = stresses.x.petsc_vec.array
     warped.set_active_scalars("VonMises")
-    plotter = pyvista.Plotter()
+    plotter = pyvista.Plotter(notebook=True)
     plotter.add_mesh(warped, show_edges=True)
+    plotter.show()
     return plotter
 
 
